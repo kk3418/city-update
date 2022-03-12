@@ -1,9 +1,7 @@
 <template>
-  <div class="container">
-    <div class="before-login">
-      <div class="text">登入後可查詢</div>
-      <div id="my-signin2"></div>
-    </div>
+  <div class="before-login">
+    <div class="text">登入後可查詢</div>
+    <div id="my-signin2"></div>
   </div>
 </template>
 <script>
@@ -44,19 +42,15 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.container {
-  padding-top: 5vh;
-  display: flex;
-  justify-content: center;
-  height: 30vh;
-  width: 100vw;
-  background-color: rgb(153, 196, 210);
-  color: rgb(255, 255, 255);
-}
 .before-login {
+  margin: 0 auto;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   .text {
     font-weight: bold;
-    margin-bottom: 3vh;
+    margin: 2vh 0 3vh;
   }
 }
 </style>

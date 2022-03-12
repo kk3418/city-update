@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <div id="map"></div>
-    <router-view />
+    <div class="container">
+      <router-view />
+    </div>
   </div>
 </template>
 <script>
@@ -56,5 +58,13 @@ body {
 
 #map {
   height: 70vh;
+}
+
+.container {
+  padding-top: 2vh;
+  height: 30vh;
+  width: 100vw;
+  background-color: rgb(153, 196, 210);
+  color: rgb(255, 255, 255);
 }
 </style>
