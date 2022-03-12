@@ -4,9 +4,15 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
+  state: {
+    idToken: "",
+  },
   getters: {},
-  mutations: {},
+  mutations: {
+    setIdToken(val) {
+      this.idToken = val;
+    },
+  },
   actions: {},
   modules: {},
 });

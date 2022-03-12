@@ -1,14 +1,51 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
+    <div id="map"></div>
     <router-view />
   </div>
 </template>
+<script>
+export default {
+  name: "App",
+  mounted() {
+    this.initialLeaflet();
+    this.polygon();
+  },
+  data() {
+    return {
+      L: window.L,
+      map: null,
+    };
+  },
+  methods: {
+    initialLeaflet() {
+      const map = this.L.map("map").setView([51.505, -0.09], 13);
+      this.map = map;
+
+      this.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+    },
+    setMarker(latlng) {
+      this.L.marker(latlng).addTo(this.map);
+    },
+    polygon() {
+      this.L.polygon([
+        [51.509, -0.08],
+        [51.503, -0.06],
+        [51.51, -0.047],
+      ]).addTo(this.map);
+    },
+  },
+};
+</script>
 
 <style lang="scss">
+body {
+  margin: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -17,16 +54,7 @@
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+#map {
+  height: 70vh;
 }
 </style>
