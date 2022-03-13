@@ -64,6 +64,7 @@ export default {
     background: rgb(198, 67, 67);
     padding: 0 2%;
     line-height: 1.6;
+    font-weight: bold;
     border-radius: 5px;
     cursor: pointer;
   }
