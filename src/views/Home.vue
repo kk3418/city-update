@@ -24,7 +24,11 @@ export default {
     },
     onSuccess(googleUser) {
       const profile = googleUser.getBasicProfile();
-      this.$store.commit("setIdToken", profile.getId());
+      const idToken = googleUser.getAuthResponse().id_token;
+      this.$store.dispatch("signInSuccess", {
+        idToken,
+        profileImage: profile.getImageUrl(),
+      });
       console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
       console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
       this.$router.push("/info");

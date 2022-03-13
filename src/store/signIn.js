@@ -16,7 +16,7 @@ export default {
     signInSuccess({ commit }, payload) {
       const { idToken, profileImage } = payload;
       commit("setIdToken", idToken);
-      commit("seetProfileImage", profileImage);
+      commit("setProfileImage", profileImage);
     },
   },
 };

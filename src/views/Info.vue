@@ -7,6 +7,15 @@
 <script>
 export default {
   name: "info-page",
+  mounted() {
+    const timer = setTimeout(() => {
+      const googleAuthInstance = window.gapi.auth2.getAuthInstance();
+      if (!googleAuthInstance.isSignedIn.get()) {
+        this.$router.go(-1);
+      }
+      clearTimeout(timer);
+    }, 1000);
+  },
   methods: {
     signout() {
       const googleAuthInstance = window.gapi.auth2.getAuthInstance();
