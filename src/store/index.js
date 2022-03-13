@@ -1,18 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import SignIn from "./signIn";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    idToken: "",
-  },
-  getters: {},
-  mutations: {
-    setIdToken(val) {
-      this.idToken = val;
-    },
-  },
-  actions: {},
-  modules: {},
+  modules: { SignIn },
 });
