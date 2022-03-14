@@ -53,15 +53,23 @@ export default {
     },
 
     setMarker(latlng) {
-      this.L.marker(latlng).addTo(this.map);
+      const marker = this.L.marker(latlng).addTo(this.map);
+      marker.bindPopup(`${this.isSignIn ? "S" : ""} here !`).openPopup();
     },
 
-    polygon() {
-      this.L.polygon([
-        [51.509, -0.08],
-        [51.503, -0.06],
-        [51.51, -0.047],
-      ]).addTo(this.map);
+    polygon(value) {
+      this.L.polygon(value).addTo(this.map);
+    },
+  },
+  computed: {
+    isSignIn() {
+      return !!this.$store.state.SignIn.idToken;
+    },
+  },
+  watch: {
+    isSignIn() {
+      const { lat, lng } = this.currentPosition;
+      this.setMarker([lat, lng]);
     },
   },
 };

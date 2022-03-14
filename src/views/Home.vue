@@ -29,18 +29,11 @@ export default {
         idToken,
         profileImage: profile.getImageUrl(),
       });
-      console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
       console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
       this.$router.push("/info");
     },
     onFailure(error) {
       console.log("login error", error);
-    },
-  },
-  computed: {
-    isSignIn() {
-      console.log("update");
-      return this.$store.idToken;
     },
   },
 };
