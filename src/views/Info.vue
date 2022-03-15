@@ -21,7 +21,7 @@ export default {
     const timer = setTimeout(() => {
       const googleAuthInstance = window.gapi.auth2.getAuthInstance();
       if (!googleAuthInstance.isSignedIn.get()) {
-        this.$router.go(-1);
+        this.$router.replace("/");
       }
       clearTimeout(timer);
     }, 700);
