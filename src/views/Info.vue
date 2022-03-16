@@ -2,16 +2,16 @@
   <div class="after-login">
     <div class="signout-btn" @click="signout">logut</div>
     <div
-      v-if="isBindFB"
+      @click="checkFBLoginState"
       class="fb-login-button right-btn"
       data-width=""
       data-size="large"
       data-button-type="continue_with"
       data-layout="default"
-      data-auto-logout-link="false"
+      data-auto-logout-link="true"
       data-use-continue-as="false"
     ></div>
-    <input v-else class="search-box" type="search" />
+    <input v-if="showSearch" class="search-box" type="search" />
   </div>
 </template>
 <script>
@@ -25,22 +25,24 @@ export default {
       }
       clearTimeout(timer);
     }, 700);
-    // eslint-disable-next-line
-    FB.getLoginStatus((res) => {
-      if (res.status === "connected") {
-        this.isBindFB = false;
-      } else {
-        this.isBindFB = true;
-      }
-    });
+    this.checkFBLoginState();
   },
   data() {
     return {
-      isBindFB: true,
+      showSearch: false,
     };
   },
   methods: {
-    checkFBLoginState() {},
+    checkFBLoginState() {
+      // eslint-disable-next-line
+      FB.getLoginStatus((res) => {
+        if (res.status === "connected") {
+          this.showSearch = true;
+        } else {
+          this.showSearch = false;
+        }
+      });
+    },
     signout() {
       const googleAuthInstance = window.gapi.auth2.getAuthInstance();
       googleAuthInstance
