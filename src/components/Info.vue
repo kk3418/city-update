@@ -2,7 +2,6 @@
   <div class="after-login">
     <div class="signout-btn" @click="signout">logut</div>
     <div
-      @click="checkFBLoginState"
       class="fb-login-button right-btn"
       data-width=""
       data-size="large"
@@ -19,13 +18,9 @@ export default {
   name: "info-page",
   mounted() {
     const timer = setTimeout(() => {
-      const googleAuthInstance = window.gapi.auth2.getAuthInstance();
-      if (!googleAuthInstance.isSignedIn.get()) {
-        this.$router.replace("/");
-      }
+      this.checkFBLoginState();
       clearTimeout(timer);
-    }, 700);
-    this.checkFBLoginState();
+    }, 1000);
   },
   data() {
     return {
@@ -52,6 +47,11 @@ export default {
           this.$router.replace("/");
         })
         .catch((e) => console.error("logout error", e));
+    },
+  },
+  computed: {
+    isSignIn() {
+      return this.$store.state.SignIn.idToken;
     },
   },
 };

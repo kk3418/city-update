@@ -30,7 +30,6 @@ export default {
         profileImage: profile.getImageUrl(),
       });
       console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
-      this.$router.push("/info");
     },
     onFailure(error) {
       console.log("login error", error);

@@ -2,13 +2,16 @@
   <div id="app">
     <div id="map"></div>
     <div class="container">
-      <router-view />
+      <component :is="info"></component>
     </div>
   </div>
 </template>
 <script>
+import Home from "@/components/Home.vue";
+import Info from "@/components/Info.vue";
 export default {
   name: "App",
+  components: { Home, Info },
   mounted() {
     this.getCurrentPosition();
   },
@@ -69,11 +72,8 @@ export default {
     isSignIn() {
       return !!this.$store.state.SignIn.idToken;
     },
-  },
-  watch: {
-    isSignIn() {
-      const { lat, lng } = this.currentPosition;
-      this.setMarker([lat, lng]);
+    info() {
+      return this.isSignIn ? Info : Home;
     },
   },
 };

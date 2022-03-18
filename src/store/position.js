@@ -8,7 +8,7 @@ export default {
       return { lat: state.lat, lng: state.lng };
     },
   },
-  mutation: {
+  mutations: {
     setLng(state, v) {
       state.lng = v;
     },
@@ -16,7 +16,7 @@ export default {
       state.lat = v;
     },
   },
-  action: {
+  actions: {
     setCurrentPosition({ commit }, payload) {
       commit("setLat", payload.lat);
       commit("setLng", payload.lng);
