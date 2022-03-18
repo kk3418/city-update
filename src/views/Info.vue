@@ -48,7 +48,7 @@ export default {
       googleAuthInstance
         .signOut()
         .then(() => {
-          console.log("signout!!");
+          this.$store.dispatch("signout");
           this.$router.replace("/");
         })
         .catch((e) => console.error("logout error", e));

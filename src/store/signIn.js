@@ -6,21 +6,25 @@ export default {
   },
   getters: {},
   mutations: {
-    setIdToken(val) {
-      this.idToken = val;
+    setIdToken(state, val) {
+      state.idToken = val;
     },
-    setProfileImage(val) {
-      this.profileImage = val;
+    setProfileImage(state, val) {
+      state.profileImage = val;
     },
-    setFbImage(val) {
-      this.FbImage = val;
+    setFbImage(state, val) {
+      state.FbImage = val;
     },
   },
   actions: {
-    signInSuccess({ commit }, payload) {
+    signIn({ commit }, payload) {
       const { idToken, profileImage } = payload;
       commit("setIdToken", idToken);
       commit("setProfileImage", profileImage);
+    },
+    signout({ commit }) {
+      commit("setIdToken", "");
+      commit("setProfileImage", "");
     },
     bindFB({ commit }, payload) {
       const { fbImage } = payload;

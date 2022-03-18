@@ -25,7 +25,7 @@ export default {
     onSuccess(googleUser) {
       const profile = googleUser.getBasicProfile();
       const idToken = googleUser.getAuthResponse().id_token;
-      this.$store.dispatch("signInSuccess", {
+      this.$store.dispatch("signIn", {
         idToken,
         profileImage: profile.getImageUrl(),
       });

@@ -22,8 +22,12 @@ export default {
   methods: {
     handleSuccess(pos) {
       const crd = pos.coords;
-      this.currentPosition["lat"] = crd.latitude;
-      this.currentPosition["lng"] = crd.longitude;
+      this.$store.dispatch("setCurrentPosition", {
+        lat: crd.latitude,
+        lng: crd.longitude,
+      });
+      this.currentPosition.lat = crd.latitude;
+      this.currentPosition.lng = crd.longitude;
       this.initialLeaflet();
     },
 
