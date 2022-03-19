@@ -2,6 +2,7 @@ export default {
   state: {
     idToken: "",
     profileImage: "",
+    fbLogin: false,
     FbImage: "",
   },
   getters: {},
@@ -15,6 +16,9 @@ export default {
     setFbImage(state, val) {
       state.FbImage = val;
     },
+    setFbLogin(state, val) {
+      state.fbLogin = val;
+    },
   },
   actions: {
     signIn({ commit }, payload) {
@@ -26,9 +30,11 @@ export default {
       commit("setIdToken", "");
       commit("setProfileImage", "");
     },
-    bindFB({ commit }, payload) {
-      const { fbImage } = payload;
-      commit("setFbImage", fbImage);
+    bindFB({ commit }) {
+      commit("setFbLogin", true);
+    },
+    disconnectFB({ commit }) {
+      commit("setFbLogin", false);
     },
   },
 };

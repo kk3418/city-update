@@ -1,16 +1,9 @@
 <template>
   <div class="after-login">
     <div class="signout-btn" @click="signout">logut</div>
-    <div
-      class="fb-login-button right-btn"
-      data-width=""
-      data-size="large"
-      data-button-type="continue_with"
-      data-layout="default"
-      data-auto-logout-link="true"
-      data-use-continue-as="false"
-    ></div>
-    <input v-if="showSearch" class="search-box" type="search" />
+    <div v-if="!isFbLogin" @click="signInFB" class="fb-login-btn">login</div>
+    <div v-if="isFbLogin" @click="signoutFB" class="fb-login-btn">logout</div>
+    <input v-if="isFbLogin" class="search-box" type="search" />
   </div>
 </template>
 <script>
@@ -22,19 +15,31 @@ export default {
       clearTimeout(timer);
     }, 1000);
   },
-  data() {
-    return {
-      showSearch: false,
-    };
-  },
   methods: {
+    signoutFB() {
+      // eslint-disable-next-line
+      FB.logout(() => {
+        this.$store.dispatch("disconnectFB");
+      });
+    },
+    signInFB() {
+      if (this.$store.state.SignIn.fbLogin) {
+        // eslint-disable-next-line
+        FB.login(
+          (response) => {
+            console.log("FB status", response.status);
+            this.$store.dispatch("bindFB");
+          },
+          { scope: "public_profile,email" },
+        );
+      }
+    },
     checkFBLoginState() {
       // eslint-disable-next-line
       FB.getLoginStatus((res) => {
         if (res.status === "connected") {
-          this.showSearch = true;
-        } else {
-          this.showSearch = false;
+          console.log("check fb", res.status);
+          this.$store.dispatch("bindFB");
         }
       });
     },
@@ -50,6 +55,9 @@ export default {
     },
   },
   computed: {
+    isFbLogin() {
+      return this.$store.state.SignIn.fbLogin;
+    },
     isSignIn() {
       return this.$store.state.SignIn.idToken;
     },
