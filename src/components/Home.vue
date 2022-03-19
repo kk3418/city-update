@@ -7,6 +7,11 @@
 <script>
 export default {
   name: "home-page",
+  data() {
+    return {
+      L: window.L,
+    };
+  },
   mounted() {
     this.renderLoginButton();
   },
@@ -22,6 +27,7 @@ export default {
         onfailure: this.onFailure,
       });
     },
+
     onSuccess(googleUser) {
       const profile = googleUser.getBasicProfile();
       const idToken = googleUser.getAuthResponse().id_token;
@@ -31,8 +37,17 @@ export default {
       });
       console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
     },
+
     onFailure(error) {
       console.log("login error", error);
+    },
+  },
+  computed: {
+    map() {
+      return this.$store.state.Position.map;
+    },
+    latlng() {
+      return this.$store.getters.latlng;
     },
   },
 };

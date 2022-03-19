@@ -2,10 +2,11 @@ export default {
   state: {
     lat: 0,
     lng: 0,
+    map: null,
   },
   getters: {
     latlng(state) {
-      return { lat: state.lat, lng: state.lng };
+      return [state.lat, state.lng];
     },
   },
   mutations: {
@@ -14,6 +15,9 @@ export default {
     },
     setLat(state, v) {
       state.lat = v;
+    },
+    setMap(state, v) {
+      state.map = v;
     },
   },
   actions: {

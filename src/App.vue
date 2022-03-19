@@ -61,7 +61,7 @@ export default {
 
     setMarker(latlng) {
       const marker = this.L.marker(latlng).addTo(this.map);
-      marker.bindPopup(`${this.isSignIn ? "S" : ""} here !`).openPopup();
+      marker.bindPopup(`${this.isSignIn && "123"} logined`).openPopup();
     },
 
     polygon(value) {
@@ -102,5 +102,12 @@ body {
   width: 100vw;
   background-color: rgb(153, 196, 210);
   color: rgb(255, 255, 255);
+}
+
+.profile {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 </style>

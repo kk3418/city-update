@@ -1,8 +1,12 @@
 <template>
   <div class="after-login">
-    <div class="signout-btn" @click="signout">logut</div>
-    <div v-if="!isFbLogin" @click="signInFB" class="fb-login-btn">login</div>
-    <div v-if="isFbLogin" @click="signoutFB" class="fb-login-btn">logout</div>
+    <div class="signout-btn" @click="signout">登出</div>
+    <div v-if="!isFbLogin" data-fb @click="signInFB" class="signout-btn">
+      綁定FB
+    </div>
+    <div v-if="isFbLogin" data-fb @click="signoutFB" class="signout-btn">
+      解除綁定FB
+    </div>
     <input v-if="isFbLogin" class="search-box" type="search" />
   </div>
 </template>
@@ -10,10 +14,7 @@
 export default {
   name: "info-page",
   mounted() {
-    const timer = setTimeout(() => {
-      this.checkFBLoginState();
-      clearTimeout(timer);
-    }, 1000);
+    this.checkFBLoginState();
   },
   methods: {
     signoutFB() {
@@ -23,7 +24,7 @@ export default {
       });
     },
     signInFB() {
-      if (this.$store.state.SignIn.fbLogin) {
+      if (!this.isFbLogin) {
         // eslint-disable-next-line
         FB.login(
           (response) => {
@@ -49,7 +50,6 @@ export default {
         .signOut()
         .then(() => {
           this.$store.dispatch("signout");
-          this.$router.replace("/");
         })
         .catch((e) => console.error("logout error", e));
     },
@@ -70,6 +70,7 @@ export default {
   width: 55%;
   margin: 0 auto;
   display: flex;
+
   .signout-btn {
     background: rgb(198, 67, 67);
     padding: 0 2%;
@@ -78,12 +79,19 @@ export default {
     border-radius: 5px;
     cursor: pointer;
   }
+
+  [data-fb] {
+    background-color: #1877f2;
+    margin-left: 5%;
+  }
+
   .search-box {
     margin-left: 10%;
     padding: 0 2%;
     width: 45%;
     font-size: 20px;
   }
+
   .right-btn {
     margin-left: 10%;
   }
