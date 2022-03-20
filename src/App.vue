@@ -3,22 +3,23 @@
     <div id="map"></div>
     <div class="container">
       <component :is="info"></component>
+      <List v-if="isSignIn" />
     </div>
   </div>
 </template>
 <script>
 import Home from "@/components/Home.vue";
 import Info from "@/components/Info.vue";
+import List from "@/components/List.vue";
 export default {
   name: "App",
-  components: { Home, Info },
+  components: { Home, Info, List },
   mounted() {
     this.getCurrentPosition();
   },
   data() {
     return {
       L: window.L,
-      map: null,
       currentPosition: { lat: 0, lng: 0 },
     };
   },
@@ -47,33 +48,27 @@ export default {
 
     initialLeaflet() {
       const { lat, lng } = this.currentPosition;
-      const map = this.L.map("map").setView([lat, lng], 13);
-      this.map = map;
+      const map = this.L.map("map").setView([lat, lng], 14);
+      window.map = map;
 
       this.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 15,
+        minZoom: 14,
       }).addTo(map);
-
-      this.setMarker([lat, lng]);
-    },
-
-    setMarker(latlng) {
-      const marker = this.L.marker(latlng).addTo(this.map);
-      marker.bindPopup(`${this.isSignIn && "123"} logined`).openPopup();
     },
 
     polygon(value) {
-      this.L.polygon(value).addTo(this.map);
+      this.L.polygon(value).addTo(window.map);
     },
   },
   computed: {
-    isSignIn() {
-      return !!this.$store.state.SignIn.idToken;
-    },
     info() {
       return this.isSignIn ? Info : Home;
+    },
+    isSignIn() {
+      return this.$store.state.SignIn.isSignIn;
     },
   },
 };
@@ -93,12 +88,12 @@ body {
 }
 
 #map {
-  height: 70vh;
+  height: 55vh;
 }
 
 .container {
   padding-top: 2vh;
-  height: 30vh;
+  height: 45vh;
   width: 100vw;
   background-color: rgb(153, 196, 210);
   color: rgb(255, 255, 255);

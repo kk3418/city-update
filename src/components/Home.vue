@@ -43,9 +43,6 @@ export default {
     },
   },
   computed: {
-    map() {
-      return this.$store.state.Position.map;
-    },
     latlng() {
       return this.$store.getters.latlng;
     },

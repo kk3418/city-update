@@ -1,18 +1,28 @@
 <template>
   <div class="after-login">
     <div class="signout-btn" @click="signout">登出</div>
-    <div v-if="!isFbLogin" data-fb @click="signInFB" class="signout-btn">
+    <div v-if="!isfbLogin" data-fb @click="signInFB" class="signout-btn">
       綁定FB
     </div>
-    <div v-if="isFbLogin" data-fb @click="signoutFB" class="signout-btn">
+    <div v-if="isfbLogin" data-fb @click="signoutFB" class="signout-btn">
       解除綁定FB
     </div>
-    <input v-if="isFbLogin" class="search-box" type="search" />
+    <input
+      v-if="isfbLogin"
+      class="search-box"
+      type="search"
+      @keyup.enter="search"
+    />
   </div>
 </template>
 <script>
 export default {
   name: "info-page",
+  data() {
+    return {
+      L: window.L,
+    };
+  },
   mounted() {
     this.checkFBLoginState();
   },
@@ -23,43 +33,89 @@ export default {
         this.$store.dispatch("disconnectFB");
       });
     },
+
     signInFB() {
-      if (!this.isFbLogin) {
+      if (!this.isfbLogin) {
         // eslint-disable-next-line
         FB.login(
-          (response) => {
-            console.log("FB status", response.status);
+          () => {
             this.$store.dispatch("bindFB");
           },
           { scope: "public_profile,email" },
         );
       }
     },
+
     checkFBLoginState() {
       // eslint-disable-next-line
       FB.getLoginStatus((res) => {
         if (res.status === "connected") {
-          console.log("check fb", res.status);
           this.$store.dispatch("bindFB");
         }
       });
     },
+
     signout() {
       const googleAuthInstance = window.gapi.auth2.getAuthInstance();
       googleAuthInstance
         .signOut()
         .then(() => {
-          this.$store.dispatch("signout");
+          window.location.reload();
         })
         .catch((e) => console.error("logout error", e));
     },
+
+    setMarker() {
+      const marker = this.L.marker(this.latlng).addTo(window.map);
+      marker
+        .bindTooltip(
+          `<img src="${this.profileImage}" class="tooltip" alt="" />`,
+        )
+        .openTooltip();
+    },
+
+    async search() {
+      const res = await fetch(
+        "https://asia-east2-botfat.cloudfunctions.net/project_controller",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            lat: this.latlng[0],
+            lng: this.latlng[1],
+            function: "xinbei_distance",
+          }),
+        },
+      );
+      const data = await res.json();
+      console.log("data", data);
+    },
   },
   computed: {
-    isFbLogin() {
+    latlng() {
+      return this.$store.getters.latlng;
+    },
+    isfbLogin() {
       return this.$store.state.SignIn.fbLogin;
     },
+    FbImage() {
+      return this.$store.state.SignIn.FbImage;
+    },
     isSignIn() {
-      return this.$store.state.SignIn.idToken;
+      return this.$store.state.SignIn.isSignIn;
+    },
+    profileImage() {
+      return this.$store.state.SignIn.profileImage;
+    },
+  },
+  watch: {
+    isSignIn(newVal) {
+      if (newVal) {
+        this.setMarker(this.latlng);
+      }
     },
   },
 };
@@ -95,5 +151,12 @@ export default {
   .right-btn {
     margin-left: 10%;
   }
+}
+
+img.tooltip {
+  object-fit: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
 </style>

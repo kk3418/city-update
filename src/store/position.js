@@ -2,7 +2,6 @@ export default {
   state: {
     lat: 0,
     lng: 0,
-    map: null,
   },
   getters: {
     latlng(state) {
@@ -15,9 +14,6 @@ export default {
     },
     setLat(state, v) {
       state.lat = v;
-    },
-    setMap(state, v) {
-      state.map = v;
     },
   },
   actions: {

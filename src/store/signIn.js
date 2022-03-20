@@ -1,5 +1,6 @@
 export default {
   state: {
+    isSignIn: false,
     idToken: "",
     profileImage: "",
     fbLogin: false,
@@ -7,6 +8,9 @@ export default {
   },
   getters: {},
   mutations: {
+    setIsSignIn(state, val) {
+      state.isSignIn = val;
+    },
     setIdToken(state, val) {
       state.idToken = val;
     },
@@ -25,13 +29,16 @@ export default {
       const { idToken, profileImage } = payload;
       commit("setIdToken", idToken);
       commit("setProfileImage", profileImage);
+      commit("setIsSignIn", true);
     },
     signout({ commit }) {
       commit("setIdToken", "");
       commit("setProfileImage", "");
+      commit("setIsSignIn", false);
     },
-    bindFB({ commit }) {
+    bindFB({ commit }, payload) {
       commit("setFbLogin", true);
+      commit("setFbImage", payload?.FbImage);
     },
     disconnectFB({ commit }) {
       commit("setFbLogin", false);
