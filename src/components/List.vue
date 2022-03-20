@@ -1,14 +1,25 @@
 <template>
   <div class="list">
-    <div>10393</div>
-    <div>10393</div>
-    <div>10393</div>
+    <div class="list-item" v-for="item in list" :key="item.id">
+      <div class="name">{{ item.stop_name }}</div>
+      <div class="distance">{{ `${transferKM(item.distance)} km` }}</div>
+    </div>
   </div>
 </template>
 <script>
 export default {
   name: "list-page",
-  methods: {},
+  methods: {
+    transferKM(v) {
+      const r = Math.round(v / 10);
+      return r / 100;
+    },
+  },
+  computed: {
+    list() {
+      return this.$store.state.Position.list;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -16,5 +27,23 @@ export default {
   margin: 3vh auto;
   width: 70%;
   overflow-y: scroll;
+}
+.list-item {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 5vh;
+  background-color: rgb(233, 242, 243);
+  color: rgb(46, 43, 43);
+  box-shadow: 1px 1px 1px rgb(104, 97, 97);
+  margin-bottom: 1vh;
+  .name {
+    font-size: 24px;
+  }
+
+  .distance {
+    font-size: 32px;
+    color: rgb(117, 117, 174);
+  }
 }
 </style>

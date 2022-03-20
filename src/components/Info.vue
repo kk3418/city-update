@@ -21,10 +21,19 @@ export default {
   data() {
     return {
       L: window.L,
+      isSearching: false,
+      options: {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      },
     };
   },
   mounted() {
     this.checkFBLoginState();
+    this.nearbySearch();
   },
   methods: {
     signoutFB() {
@@ -74,15 +83,13 @@ export default {
         .openTooltip();
     },
 
-    async search() {
+    async nearbySearch() {
+      if (this.isSearching) return;
+      this.isSearching = true;
       const res = await fetch(
         "https://asia-east2-botfat.cloudfunctions.net/project_controller",
         {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
+          ...this.options,
           body: JSON.stringify({
             lat: this.latlng[0],
             lng: this.latlng[1],
@@ -91,6 +98,8 @@ export default {
         },
       );
       const data = await res.json();
+      this.$store.dispatch("setPlaceResult", data.result || []);
+      this.isSearching = false;
       console.log("data", data);
     },
   },
