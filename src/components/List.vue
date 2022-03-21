@@ -2,7 +2,7 @@
   <div class="list">
     <div class="list-item" v-for="item in list" :key="item.id">
       <div class="name">{{ item.stop_name }}</div>
-      <div class="distance">{{ `${transferKM(item.distance)} km` }}</div>
+      <div class="distance">{{ `${item.distance} km` }}</div>
     </div>
   </div>
 </template>

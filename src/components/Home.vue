@@ -13,7 +13,10 @@ export default {
     };
   },
   mounted() {
-    this.renderLoginButton();
+    const timer = setTimeout(() => {
+      this.renderLoginButton();
+      this.clearInterval(timer);
+    }, 2000);
   },
   methods: {
     renderLoginButton() {
@@ -31,10 +34,15 @@ export default {
     onSuccess(googleUser) {
       const profile = googleUser.getBasicProfile();
       const idToken = googleUser.getAuthResponse().id_token;
+      const profileImage = profile.getImageUrl();
       this.$store.dispatch("signIn", {
         idToken,
-        profileImage: profile.getImageUrl(),
+        profileImage,
       });
+      window.currentMarker
+        .bindTooltip(`<img src="${profileImage}" alt="" class="tooltip" />`)
+        .addTo(window.map)
+        .openTooltip();
       console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
     },
 

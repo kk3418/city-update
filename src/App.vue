@@ -15,48 +15,38 @@ export default {
   name: "App",
   components: { Home, Info, List },
   mounted() {
-    this.getCurrentPosition();
+    this.initialLeaflet();
   },
   data() {
     return {
       L: window.L,
-      currentPosition: { lat: 0, lng: 0 },
     };
   },
   methods: {
-    handleSuccess(pos) {
-      const crd = pos.coords;
-      this.$store.dispatch("setCurrentPosition", {
-        lat: crd.latitude,
-        lng: crd.longitude,
-      });
-      this.currentPosition.lat = crd.latitude;
-      this.currentPosition.lng = crd.longitude;
-      this.initialLeaflet();
-    },
-
-    handleError(e) {
-      throw ("Can't get user position", e);
-    },
-
-    getCurrentPosition() {
-      navigator.geolocation.getCurrentPosition(
-        this.handleSuccess,
-        this.handleError,
-      );
-    },
-
     initialLeaflet() {
-      const { lat, lng } = this.currentPosition;
-      const map = this.L.map("map").setView([lat, lng], 14);
+      const map = this.L.map("map");
       window.map = map;
 
       this.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 15,
-        minZoom: 14,
+        minZoom: 13,
       }).addTo(map);
+
+      map.locate({ setView: true, watch: true, maxZoom: 14 });
+      map.on("locationfound", (e) => {
+        const crd = e.latlng;
+        if (!window.currentMarker) {
+          window.currentMarker = this.L.marker(crd).addTo(map);
+        } else {
+          window.currentMarker.setLatLng(crd);
+        }
+        this.$store.dispatch("setCurrentPosition", {
+          lat: crd.lat,
+          lng: crd.lng,
+        });
+      });
     },
 
     polygon(value) {

@@ -33,7 +33,6 @@ export default {
   },
   mounted() {
     this.checkFBLoginState();
-    this.nearbySearch();
   },
   methods: {
     signoutFB() {
@@ -49,6 +48,7 @@ export default {
         FB.login(
           () => {
             this.$store.dispatch("bindFB");
+            this.nearbySearch();
           },
           { scope: "public_profile,email" },
         );
@@ -60,6 +60,7 @@ export default {
       FB.getLoginStatus((res) => {
         if (res.status === "connected") {
           this.$store.dispatch("bindFB");
+          this.nearbySearch();
         }
       });
     },
