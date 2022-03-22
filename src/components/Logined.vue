@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-  name: "info-page",
+  name: "logined-component",
   data() {
     return {
       L: window.L,

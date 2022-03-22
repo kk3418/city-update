@@ -2,18 +2,18 @@
   <div id="app">
     <div id="map"></div>
     <div class="container">
-      <component :is="info"></component>
+      <component :is="logined"></component>
       <List v-if="isSignIn" />
     </div>
   </div>
 </template>
 <script>
-import Home from "@/components/Home.vue";
-import Info from "@/components/Info.vue";
+import Login from "@/components/Login.vue";
+import Logined from "@/components/Logined.vue";
 import List from "@/components/List.vue";
 export default {
   name: "App",
-  components: { Home, Info, List },
+  components: { Login, Logined, List },
   async mounted() {
     await this.initialLeaflet();
     await this.getLocation();
@@ -96,8 +96,8 @@ export default {
     },
   },
   computed: {
-    info() {
-      return this.isSignIn ? Info : Home;
+    logined() {
+      return this.isSignIn ? Logined : Login;
     },
     isSignIn() {
       return this.$store.state.SignIn.isSignIn;

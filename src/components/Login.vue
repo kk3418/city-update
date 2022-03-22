@@ -6,7 +6,7 @@
 </template>
 <script>
 export default {
-  name: "home-page",
+  name: "login-component",
   data() {
     return {
       L: window.L,
@@ -14,11 +14,7 @@ export default {
   },
   mounted() {},
   methods: {},
-  computed: {
-    latlng() {
-      return this.$store.getters.latlng;
-    },
-  },
+  computed: {},
 };
 </script>
 <style lang="scss" scoped>
