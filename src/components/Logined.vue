@@ -22,6 +22,7 @@ export default {
     return {
       L: window.L,
       isSearching: false,
+      url: "https://asia-east2-botfat.cloudfunctions.net/project_controller",
       options: {
         method: "POST",
         headers: {
@@ -50,6 +51,7 @@ export default {
             if (respond.status === "connected") {
               this.$store.dispatch("bindFB");
               this.nearbySearch();
+              this.getPolygonResults();
             }
           },
           { scope: "public_profile,email" },
@@ -63,6 +65,7 @@ export default {
         if (res.status === "connected") {
           this.$store.dispatch("bindFB");
           this.nearbySearch();
+          this.getPolygonResults();
         }
       });
     },
@@ -89,21 +92,42 @@ export default {
     async nearbySearch() {
       if (this.isSearching) return;
       this.isSearching = true;
-      const res = await fetch(
-        "https://asia-east2-botfat.cloudfunctions.net/project_controller",
-        {
-          ...this.options,
-          body: JSON.stringify({
-            lat: this.latlng[0],
-            lng: this.latlng[1],
-            function: "xinbei_distance",
-          }),
-        },
-      );
+      const res = await fetch(this.url, {
+        ...this.options,
+        body: JSON.stringify({
+          lat: this.latlng[0],
+          lng: this.latlng[1],
+          function: "xinbei_distance",
+        }),
+      });
       const data = await res.json();
       this.$store.dispatch("setPlaceResult", data.result || []);
       this.isSearching = false;
       console.log("data", data);
+    },
+
+    async getPolygonResults() {
+      const res = await fetch(this.url, {
+        ...this.options,
+        body: JSON.stringify({
+          directory: "tucheng.json",
+          function: "xinbei_json",
+        }),
+      });
+      const data = await res.json();
+      this.$store.dispatch("setPolygonsResult", data.result || {});
+      console.log("polygon", data);
+    },
+
+    setPolygon(value) {
+      console.warn("draw");
+      window.polygons = this.L.polygon(value, {
+        color: "#3388ff",
+        zIndexOffset: 10,
+        fillOpacity: 1,
+        weight: 5,
+        smoothFactor: 0.5,
+      }).addTo(window.map);
     },
   },
   computed: {
@@ -122,11 +146,20 @@ export default {
     profileImage() {
       return this.$store.state.SignIn.profileImage;
     },
+    polygons() {
+      return this.$store.state.Position.polygons;
+    },
   },
   watch: {
     isSignIn(newVal) {
       if (newVal) {
         this.setMarker(this.latlng);
+      }
+    },
+    polygons(newVal) {
+      if (newVal) {
+        console.warn("polygon setting");
+        this.setPolygon(newVal);
       }
     },
   },

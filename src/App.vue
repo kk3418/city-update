@@ -33,8 +33,7 @@ export default {
         this.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          maxZoom: 15,
-          minZoom: 13,
+          minZoom: 10,
         }).addTo(map);
         resolve();
       });
@@ -42,7 +41,7 @@ export default {
 
     getLocation() {
       return new Promise((resolve) => {
-        window.map.locate({ setView: true, watch: true, maxZoom: 14 });
+        window.map.locate({ setView: true, watch: true, maxZoom: 16 });
         window.map.on("locationfound", (e) => {
           resolve();
           const crd = e.latlng;
@@ -89,10 +88,6 @@ export default {
 
     onFailure(error) {
       console.log("login error", error);
-    },
-
-    polygon(value) {
-      this.L.polygon(value).addTo(window.map);
     },
   },
   computed: {

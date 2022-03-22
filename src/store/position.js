@@ -4,6 +4,7 @@ export default {
     lng: 0,
     list: [],
     result: [],
+    polygons: [],
   },
   getters: {
     latlng(state) {
@@ -27,6 +28,9 @@ export default {
         state.result = v;
       }
     },
+    setPolygons(state, v) {
+      state.polygons = [...v];
+    },
   },
   actions: {
     setPlaceResult({ commit }, payload) {
@@ -47,6 +51,17 @@ export default {
     setCurrentPosition({ commit }, payload) {
       commit("setLat", payload.lat);
       commit("setLng", payload.lng);
+    },
+    setPolygonsResult({ commit }, payload) {
+      const { features = [] } = payload;
+      const polygons = [];
+      features.forEach((item) => {
+        const crd = item?.geometry?.coordinates;
+        if (crd && crd[0]?.length) {
+          polygons.push(crd[0]);
+        }
+      });
+      commit("setPolygons", polygons);
     },
   },
 };
