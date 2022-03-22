@@ -120,14 +120,14 @@ export default {
     },
 
     setPolygon(value) {
-      console.warn("draw");
-      window.polygons = this.L.polygon(value, {
-        color: "#3388ff",
-        zIndexOffset: 10,
-        fillOpacity: 1,
-        weight: 5,
-        smoothFactor: 0.5,
-      }).addTo(window.map);
+      window.poly = [];
+      value.forEach((item, index) => {
+        window.poly[index] = this.L.polygon(item, {
+          color: "#000",
+          fillOpacity: 1,
+          weight: 5,
+        }).addTo(window.map);
+      });
     },
   },
   computed: {
@@ -158,7 +158,6 @@ export default {
     },
     polygons(newVal) {
       if (newVal) {
-        console.warn("polygon setting");
         this.setPolygon(newVal);
       }
     },
