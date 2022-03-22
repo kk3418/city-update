@@ -14,8 +14,10 @@ import List from "@/components/List.vue";
 export default {
   name: "App",
   components: { Home, Info, List },
-  mounted() {
-    this.initialLeaflet();
+  async mounted() {
+    await this.initialLeaflet();
+    await this.getLocation();
+    this.renderLoginButton();
   },
   data() {
     return {
@@ -24,29 +26,69 @@ export default {
   },
   methods: {
     initialLeaflet() {
-      const map = this.L.map("map");
-      window.map = map;
+      return new Promise((resolve) => {
+        const map = this.L.map("map");
+        window.map = map;
 
-      this.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 15,
-        minZoom: 13,
-      }).addTo(map);
+        this.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 15,
+          minZoom: 13,
+        }).addTo(map);
+        resolve();
+      });
+    },
 
-      map.locate({ setView: true, watch: true, maxZoom: 14 });
-      map.on("locationfound", (e) => {
-        const crd = e.latlng;
-        if (!window.currentMarker) {
-          window.currentMarker = this.L.marker(crd).addTo(map);
-        } else {
-          window.currentMarker.setLatLng(crd);
-        }
-        this.$store.dispatch("setCurrentPosition", {
-          lat: crd.lat,
-          lng: crd.lng,
+    getLocation() {
+      return new Promise((resolve) => {
+        window.map.locate({ setView: true, watch: true, maxZoom: 14 });
+        window.map.on("locationfound", (e) => {
+          resolve();
+          const crd = e.latlng;
+          if (!window.currentMarker) {
+            window.currentMarker = this.L.marker(crd).addTo(window.map);
+          } else {
+            window.currentMarker.setLatLng(crd);
+          }
+          this.$store.dispatch("setCurrentPosition", {
+            lat: crd.lat,
+            lng: crd.lng,
+          });
         });
       });
+    },
+
+    renderLoginButton() {
+      window.gapi.signin2.render("my-signin2", {
+        scope: "profile email",
+        width: 240,
+        height: 50,
+        longtitle: true,
+        theme: "dark",
+        onsuccess: this.onSuccess,
+        onfailure: this.onFailure,
+      });
+    },
+
+    onSuccess(googleUser) {
+      const profile = googleUser.getBasicProfile();
+      const idToken = googleUser.getAuthResponse().id_token;
+      const profileImage = profile.getImageUrl();
+
+      this.$store.dispatch("signIn", {
+        idToken,
+        profileImage,
+      });
+      window.currentMarker
+        .bindTooltip(`<img src="${profileImage}" alt="" class="tooltip" />`)
+        .addTo(window.map)
+        .openTooltip();
+      console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
+    },
+
+    onFailure(error) {
+      console.log("login error", error);
     },
 
     polygon(value) {

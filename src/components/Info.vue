@@ -46,9 +46,11 @@ export default {
       if (!this.isfbLogin) {
         // eslint-disable-next-line
         FB.login(
-          () => {
-            this.$store.dispatch("bindFB");
-            this.nearbySearch();
+          (respond) => {
+            if (respond.status === "connected") {
+              this.$store.dispatch("bindFB");
+              this.nearbySearch();
+            }
           },
           { scope: "public_profile,email" },
         );

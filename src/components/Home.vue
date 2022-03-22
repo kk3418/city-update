@@ -12,44 +12,8 @@ export default {
       L: window.L,
     };
   },
-  mounted() {
-    const timer = setTimeout(() => {
-      this.renderLoginButton();
-      this.clearInterval(timer);
-    }, 2000);
-  },
-  methods: {
-    renderLoginButton() {
-      window.gapi.signin2.render("my-signin2", {
-        scope: "profile email",
-        width: 240,
-        height: 50,
-        longtitle: true,
-        theme: "dark",
-        onsuccess: this.onSuccess,
-        onfailure: this.onFailure,
-      });
-    },
-
-    onSuccess(googleUser) {
-      const profile = googleUser.getBasicProfile();
-      const idToken = googleUser.getAuthResponse().id_token;
-      const profileImage = profile.getImageUrl();
-      this.$store.dispatch("signIn", {
-        idToken,
-        profileImage,
-      });
-      window.currentMarker
-        .bindTooltip(`<img src="${profileImage}" alt="" class="tooltip" />`)
-        .addTo(window.map)
-        .openTooltip();
-      console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
-    },
-
-    onFailure(error) {
-      console.log("login error", error);
-    },
-  },
+  mounted() {},
+  methods: {},
   computed: {
     latlng() {
       return this.$store.getters.latlng;
