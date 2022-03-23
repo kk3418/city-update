@@ -58,7 +58,10 @@ export default {
       features.forEach((item) => {
         const crd = item?.geometry?.coordinates;
         if (crd && crd[0]?.length) {
-          polygons.push(crd[0]);
+          const inverse = crd[0].map((iter) => {
+            return [iter[1], iter[0]];
+          });
+          polygons.push(inverse);
         }
       });
       commit("setPolygons", polygons);

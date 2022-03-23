@@ -120,14 +120,14 @@ export default {
     },
 
     setPolygon(value) {
-      window.poly = [];
-      value.forEach((item, index) => {
-        window.poly[index] = this.L.polygon(item, {
-          color: "#000",
-          fillOpacity: 1,
-          weight: 5,
-        }).addTo(window.map);
-      });
+      const polygon = this.L.polygon(value, {
+        color: "blue",
+        fill: true,
+        fillColor: "purple",
+        opacity: 0.6,
+        weight: 3,
+      }).addTo(window.map);
+      window.polygon = polygon;
     },
   },
   computed: {
