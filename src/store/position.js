@@ -39,7 +39,7 @@ export default {
           id: item.id,
           distance: item.distance,
           latitude: item.latitude,
-          longtitude: item.longtitude,
+          longitude: item.longitude,
           stop_name: item.stop_name,
         };
       });
@@ -55,6 +55,7 @@ export default {
     setPolygonsResult({ commit }, payload) {
       const { features = [] } = payload;
       const polygons = [];
+
       features.forEach((item) => {
         const crd = item?.geometry?.coordinates;
         if (crd && crd[0]?.length) {
@@ -64,6 +65,7 @@ export default {
           polygons.push(inverse);
         }
       });
+
       commit("setPolygons", polygons);
     },
   },

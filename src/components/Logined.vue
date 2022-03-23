@@ -80,9 +80,8 @@ export default {
         .catch((e) => console.error("logout error", e));
     },
 
-    setMarker() {
-      const marker = this.L.marker(this.latlng).addTo(window.map);
-      marker
+    setCurrentMarker() {
+      window.currentMarker
         .bindTooltip(
           `<img src="${this.profileImage}" class="tooltip" alt="" />`,
         )
@@ -116,7 +115,6 @@ export default {
       });
       const data = await res.json();
       this.$store.dispatch("setPolygonsResult", data.result || {});
-      console.log("polygon", data);
     },
 
     setPolygon(value) {
@@ -128,6 +126,18 @@ export default {
         weight: 3,
       }).addTo(window.map);
       window.polygon = polygon;
+    },
+
+    setPlaceMarkers(values) {
+      if (values?.length) {
+        values?.forEach((value) => {
+          this.L.marker([value.latitude, value.longitude]).addTo(window.map);
+        });
+      }
+    },
+
+    search() {
+      console.warn("searcning");
     },
   },
   computed: {
@@ -149,11 +159,14 @@ export default {
     polygons() {
       return this.$store.state.Position.polygons;
     },
+    result() {
+      return this.$store.state.Position.result;
+    },
   },
   watch: {
     isSignIn(newVal) {
       if (newVal) {
-        this.setMarker(this.latlng);
+        this.setCurrentMarker(this.latlng);
       }
     },
     polygons(newVal) {
@@ -161,12 +174,17 @@ export default {
         this.setPolygon(newVal);
       }
     },
+    result(newVal) {
+      if (newVal) {
+        this.setPlaceMarkers(newVal);
+      }
+    },
   },
 };
 </script>
 <style lang="scss" scpoed>
 .after-login {
-  font-size: 24px;
+  font-size: 2vmax;
   width: 55%;
   margin: 0 auto;
   display: flex;
@@ -189,7 +207,7 @@ export default {
     margin-left: 10%;
     padding: 0 2%;
     width: 45%;
-    font-size: 20px;
+    font-size: 2vmax;
   }
 
   .right-btn {

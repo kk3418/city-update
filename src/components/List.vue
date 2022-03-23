@@ -38,11 +38,11 @@ export default {
   box-shadow: 1px 1px 1px rgb(104, 97, 97);
   margin-bottom: 1vh;
   .name {
-    font-size: 24px;
+    font-size: 2vmax;
   }
 
   .distance {
-    font-size: 32px;
+    font-size: 2.6vmax;
     color: rgb(117, 117, 174);
   }
 }
