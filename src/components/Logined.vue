@@ -11,6 +11,7 @@
       v-if="isfbLogin"
       class="search-box"
       type="search"
+      v-model="input"
       @keyup.enter="search"
     />
   </div>
@@ -22,6 +23,7 @@ export default {
     return {
       L: window.L,
       isSearching: false,
+      input: "",
       url: "https://asia-east2-botfat.cloudfunctions.net/project_controller",
       options: {
         method: "POST",
@@ -137,7 +139,18 @@ export default {
     },
 
     search() {
-      console.warn("searcning");
+      const search = this.searchResult[this.input];
+
+      if (search) {
+        const latlng = [search[0].lat, search[0].lng];
+        window.map.stopLocate();
+        window.map.setView(latlng, 16);
+        this.L.circle(latlng, {
+          radius: 500,
+          color: "red",
+          fillOpacity: 0.4,
+        }).addTo(window.map);
+      }
     },
   },
   computed: {
@@ -161,6 +174,9 @@ export default {
     },
     result() {
       return this.$store.state.Position.result;
+    },
+    searchResult() {
+      return this.$store.state.Position.searchResult;
     },
   },
   watch: {

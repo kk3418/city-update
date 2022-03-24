@@ -9,12 +9,7 @@
 <script>
 export default {
   name: "list-page",
-  methods: {
-    transferKM(v) {
-      const r = Math.round(v / 10);
-      return r / 100;
-    },
-  },
+  methods: {},
   computed: {
     list() {
       return this.$store.state.Position.list;
