@@ -20,9 +20,7 @@ export default {
       state.lat = v;
     },
     setList(state, v) {
-      if (v?.length) {
-        state.list = v;
-      }
+      state.list = v;
     },
     setResult(state, v) {
       if (v?.length) {

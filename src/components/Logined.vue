@@ -42,6 +42,7 @@ export default {
       // eslint-disable-next-line
       FB.logout(() => {
         this.$store.dispatch("disconnectFB");
+        this.$store.commit("setList", []);
       });
     },
 
@@ -145,11 +146,16 @@ export default {
         const latlng = [search[0].lat, search[0].lng];
         window.map.stopLocate();
         window.map.setView(latlng, 16);
-        this.L.circle(latlng, {
-          radius: 500,
-          color: "red",
-          fillOpacity: 0.4,
-        }).addTo(window.map);
+
+        search.forEach((place) => {
+          const latlng = [place.lat, place.lng];
+          this.L.marker(latlng).addTo(window.map);
+        });
+
+        const searchList = this.result.filter(
+          ({ stop_name }) => stop_name === this.input,
+        );
+        this.$store.commit("setList", searchList);
       }
     },
   },
@@ -192,7 +198,7 @@ export default {
     },
     result(newVal) {
       if (newVal) {
-        this.setPlaceMarkers(newVal);
+        // this.setPlaceMarkers(newVal);
       }
     },
   },

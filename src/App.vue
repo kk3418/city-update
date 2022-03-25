@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div id="map"></div>
+    <div class="current-btn" @click="currentLocation">現在位置</div>
     <div class="container">
       <component :is="logined"></component>
       <List v-if="isSignIn" />
@@ -37,6 +38,10 @@ export default {
         }).addTo(map);
         resolve();
       });
+    },
+
+    currentLocation() {
+      window.map.locate({ setView: true, watch: true, maxZoom: 16 });
     },
 
     getLocation() {
@@ -107,6 +112,7 @@ body {
 }
 
 #app {
+  position: relative;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -131,5 +137,16 @@ body {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.current-btn {
+  position: absolute;
+  right: 5vw;
+  top: 45vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 1.5vh 1.5vw;
+  z-index: 400;
+  cursor: nesw-resize;
 }
 </style>

@@ -19,8 +19,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .list {
-  margin: 3vh auto;
+  margin: 3vh 0;
+  padding: 0 15%;
   width: 70%;
+  height: 80%;
   overflow-y: scroll;
 }
 .list-item {
