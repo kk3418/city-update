@@ -144,7 +144,6 @@ export default {
 
       if (search) {
         const latlng = [search[0].lat, search[0].lng];
-        window.map.stopLocate();
         window.map.setView(latlng, 16);
 
         search.forEach((place) => {

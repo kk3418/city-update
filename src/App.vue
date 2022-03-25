@@ -41,7 +41,7 @@ export default {
     },
 
     currentLocation() {
-      window.map.locate({ setView: true, watch: true, maxZoom: 16 });
+      window.map.setView(this.latlng, 16);
     },
 
     getLocation() {
@@ -96,6 +96,9 @@ export default {
     },
   },
   computed: {
+    latlng() {
+      return this.$store.getters.latlng;
+    },
     logined() {
       return this.isSignIn ? Logined : Login;
     },
