@@ -1,6 +1,6 @@
 [build]
   publish = "/dist"
-  base = "/dsit"
+  base = "/"
 
 [[redirects]]
   from = "/*"
