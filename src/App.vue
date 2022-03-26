@@ -42,6 +42,8 @@ export default {
 
     currentLocation() {
       window.map.setView(this.latlng, 16);
+      const list = this.result?.slice(0, 5);
+      list && this.$store.commit("setList", list);
     },
 
     getLocation() {
@@ -104,6 +106,9 @@ export default {
     },
     isSignIn() {
       return this.$store.state.SignIn.isSignIn;
+    },
+    result() {
+      return this.$store.state.Position.result;
     },
   },
 };
