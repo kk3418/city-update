@@ -154,6 +154,7 @@ export default {
     },
 
     search() {
+      if (!this.input) return;
       const resultKey = this.existKey();
       const search = this.searchResult[resultKey];
 
@@ -208,11 +209,6 @@ export default {
     polygons(newVal) {
       if (newVal) {
         this.setPolygon(newVal);
-      }
-    },
-    result(newVal) {
-      if (newVal) {
-        // this.setPlaceMarkers(newVal);
       }
     },
   },
