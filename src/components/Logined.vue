@@ -139,8 +139,23 @@ export default {
       }
     },
 
+    existKey() {
+      const keys = Object.keys(this.searchResult);
+      const check = new RegExp(`${this.input}.?`, "gi");
+      let resultKey = "";
+      for (let i = 0; i < keys.length; i++) {
+        if (check.test(keys[i])) {
+          resultKey = keys[i];
+          break;
+        }
+        continue;
+      }
+      return resultKey;
+    },
+
     search() {
-      const search = this.searchResult[this.input];
+      const resultKey = this.existKey();
+      const search = this.searchResult[resultKey];
 
       if (search) {
         const latlng = [search[0].lat, search[0].lng];
@@ -152,7 +167,7 @@ export default {
         });
 
         const searchList = this.result.filter(
-          ({ stop_name }) => stop_name === this.input,
+          ({ stop_name }) => stop_name === resultKey,
         );
         this.$store.commit("setList", searchList);
       }
