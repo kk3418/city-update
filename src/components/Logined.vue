@@ -38,39 +38,36 @@ export default {
     this.checkFBLoginState();
   },
   methods: {
+    FBLoginAction(respond) {
+      if (respond.status === "connected") {
+        this.nearbySearch();
+        this.getPolygonResults();
+
+        const userId = respond.authResponse.userID;
+        window.FB.api(`${userId}?fields=picture`, (res) => {
+          if (res && !res.error) {
+            const FbImage = res.picture?.data?.url;
+            this.$store.dispatch("bindFB", { FbImage });
+          }
+        });
+      }
+    },
     signoutFB() {
-      // eslint-disable-next-line
-      FB.logout(() => {
+      window.FB.logout(() => {
         this.$store.dispatch("disconnectFB");
         this.$store.commit("setList", []);
+        this.setCurrentMarker(this.profileImage);
       });
     },
 
     signInFB() {
       if (!this.isfbLogin) {
-        // eslint-disable-next-line
-        FB.login(
-          (respond) => {
-            if (respond.status === "connected") {
-              this.$store.dispatch("bindFB");
-              this.nearbySearch();
-              this.getPolygonResults();
-            }
-          },
-          { scope: "public_profile,email" },
-        );
+        window.FB.login(this.FBLoginAction, { scope: "public_profile,email" });
       }
     },
 
     checkFBLoginState() {
-      // eslint-disable-next-line
-      FB.getLoginStatus((res) => {
-        if (res.status === "connected") {
-          this.$store.dispatch("bindFB");
-          this.nearbySearch();
-          this.getPolygonResults();
-        }
-      });
+      window.FB.getLoginStatus(this.FBLoginAction);
     },
 
     signout() {
@@ -83,11 +80,14 @@ export default {
         .catch((e) => console.error("logout error", e));
     },
 
-    setCurrentMarker() {
+    setCurrentMarker(image) {
+      if (window.currentMarker?.getTooltip()) {
+        window.currentMarker.unbindTooltip();
+      }
       window.currentMarker
-        .bindTooltip(
-          `<img src="${this.profileImage}" class="tooltip" alt="" />`,
-        )
+        .bindTooltip(`<img src="${image}" class="tooltip" alt="" />`, {
+          permanent: true,
+        })
         .openTooltip();
     },
 
@@ -201,9 +201,9 @@ export default {
     },
   },
   watch: {
-    isSignIn(newVal) {
+    FbImage(newVal) {
       if (newVal) {
-        this.setCurrentMarker(this.latlng);
+        this.setCurrentMarker(newVal);
       }
     },
     polygons(newVal) {
