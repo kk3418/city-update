@@ -17,6 +17,7 @@ export default {
   components: { Login, Logined, List },
   async mounted() {
     await this.initialLeaflet();
+    await this.initialGoogle();
     await this.getLocation();
     this.renderLoginButton();
   },
@@ -36,6 +37,20 @@ export default {
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           minZoom: 13,
         }).addTo(map);
+        resolve();
+      });
+    },
+
+    initialGoogle() {
+      return new Promise((resolve) => {
+        window.onGoogleLibraryLoad = () => {
+          window.google.accounts.id.initialize({
+            client_id:
+              "513374919811-20gi47snsc0vds9dvv1g9fr8leesn5o2.apps.googleusercontent.com",
+            callback: this.handleResponse,
+          });
+          window.google.accounts.id.prompt();
+        };
         resolve();
       });
     },
@@ -66,21 +81,25 @@ export default {
     },
 
     renderLoginButton() {
-      window.gapi.signin2.render("my-signin2", {
-        scope: "profile email",
-        width: 240,
-        height: 50,
-        longtitle: true,
-        theme: "dark",
-        onsuccess: this.onSuccess,
-        onfailure: this.onFailure,
-      });
+      window.onGoogleLibraryLoad();
+      window.google.accounts.id.renderButton(
+        document.getElementById("my-signin2"),
+        {
+          width: 120,
+          type: "standard",
+          size: "large",
+          theme: "outline",
+          shape: "pill",
+          logo_alignment: "left",
+          text: "signin",
+        },
+      );
     },
 
-    onSuccess(googleUser) {
-      const profile = googleUser.getBasicProfile();
-      const idToken = googleUser.getAuthResponse().id_token;
-      const profileImage = profile.getImageUrl();
+    handleResponse(res) {
+      const profile = res.credential.payload;
+      const idToken = profile.aud;
+      const profileImage = profile.picture;
 
       this.$store.dispatch("signIn", {
         idToken,
@@ -90,7 +109,7 @@ export default {
         .bindTooltip(`<img src="${profileImage}" alt="" class="tooltip" />`)
         .addTo(window.map)
         .openTooltip();
-      console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
+      console.log("Email: " + profile.email); // This is null if the 'email' scope is not present.
     },
 
     onFailure(error) {
