@@ -9,6 +9,7 @@
   </div>
 </template>
 <script>
+import * as jose from "jose";
 import Login from "@/components/Login.vue";
 import Logined from "@/components/Logined.vue";
 import List from "@/components/List.vue";
@@ -48,6 +49,7 @@ export default {
             client_id:
               "513374919811-20gi47snsc0vds9dvv1g9fr8leesn5o2.apps.googleusercontent.com",
             callback: this.handleResponse,
+            auto_select: true,
           });
           window.google.accounts.id.prompt();
         };
@@ -97,7 +99,7 @@ export default {
     },
 
     handleResponse(res) {
-      const profile = res.credential.payload;
+      const profile = jose.decodeJwt(res.credential);
       const idToken = profile.aud;
       const profileImage = profile.picture;
 
@@ -109,7 +111,6 @@ export default {
         .bindTooltip(`<img src="${profileImage}" alt="" class="tooltip" />`)
         .addTo(window.map)
         .openTooltip();
-      console.log("Email: " + profile.email); // This is null if the 'email' scope is not present.
     },
 
     onFailure(error) {

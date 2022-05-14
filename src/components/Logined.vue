@@ -71,13 +71,9 @@ export default {
     },
 
     signout() {
-      const googleAuthInstance = window.gapi.auth2.getAuthInstance();
-      googleAuthInstance
-        .signOut()
-        .then(() => {
-          window.location.reload();
-        })
-        .catch((e) => console.error("logout error", e));
+      this.$store.dispatch("signout");
+      window.google.accounts.id.disableAutoSelect();
+      window.location.reload();
     },
 
     setCurrentMarker(image) {
